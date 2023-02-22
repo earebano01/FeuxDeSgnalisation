@@ -23,17 +23,17 @@ class Feux{
         Etat etat_souhaiter;
 
         Timer tm;
-    
+        
     public:
         Feux();
         Feux(int LED_vert, int LED_jaune, int LED_rouge);
         void go();
         void stop();
+        void clignoteVert();
         void loopLights();
         void BoucleUnFeux();
         void goToVert();
         void goToRouge();
-        void blinkVert();
         void vert();
         void jaune();
         void rouge();

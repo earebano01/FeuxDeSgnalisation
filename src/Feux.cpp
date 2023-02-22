@@ -2,28 +2,31 @@
 #include <Arduino.h>
 
 #define TEMP_CLIGNOTE_VERT 3000
+#define TEMP_VERT  3000
+#define TEMP_JAUNE 2000
+#define TEMP_ROUGE 8000
 
 Feux::Feux(){};
 
 Feux::Feux(int LED_vert, int LED_jaune, int LED_rouge) {
     // TODO Hardcoded pour le moment
     this->temp_clignote_vert = TEMP_CLIGNOTE_VERT;
-    this->temp_jaune         = 2000;
-    this->temp_vert          = 5000;
-    this->temp_rouge         = 5000;
+    this->temp_jaune         = TEMP_JAUNE;
+    this->temp_vert          = TEMP_VERT;
+    this->temp_rouge         = TEMP_ROUGE;
 
     this->LED_vert  = LED_vert;
     this->LED_jaune = LED_jaune;
     this->LED_rouge = LED_rouge;
 
-    pinMode(LED_vert, OUTPUT);
-    pinMode(LED_jaune, OUTPUT);
-    pinMode(LED_rouge, OUTPUT);
+    pinMode(this->LED_vert, OUTPUT);
+    pinMode(this->LED_jaune, OUTPUT);
+    pinMode(this->LED_rouge, OUTPUT);
 
-    etat_actuel          = ROUGE;
-    this->etat_souhaiter = VERT;
+    this->etat_actuel    = VERT;
+    this->etat_souhaiter = ROUGE;
     this->tm.startTimer(temp_rouge);
-    rouge();
+    vert();
 }
 
 void Feux::go() {
@@ -53,7 +56,7 @@ void Feux::BoucleUnFeux(){
         break;
 
         case CLIGNOTE_VERT:
-            blinkVert();
+            clignoteVert();
             if (this->tm.isTimerReady()) {
                 etat_actuel = VERT;
                 this->tm.startTimer(temp_vert);
@@ -82,70 +85,50 @@ void Feux::BoucleUnFeux(){
 void Feux::goToVert() {
     switch (etat_actuel) {
         case ROUGE:
-            rouge();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = CLIGNOTE_VERT;
-                this->tm.startTimer(temp_clignote_vert);
-            }
-        break;
-
-        case CLIGNOTE_VERT:
-            blinkVert();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = VERT;
-                this->tm.startTimer(temp_vert);
-            }
-            
-        break;
-
-        case VERT:
-            vert();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = JAUNE;
-                this->tm.startTimer(temp_jaune);
-            }
-        break;
-
+          etat_actuel = JAUNE;
+          tm.startTimer(temp_jaune);
+          break;
         case JAUNE:
-            jaune();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = ROUGE;
-                this->tm.startTimer(temp_rouge);
-            }
-        break;
-    }
+          jaune();
+          if (tm.isTimerReady()) {
+            etat_actuel = VERT;
+          }
+          break;
+        case CLIGNOTE_VERT:
+          etat_actuel = VERT;
+          break;
+        case VERT:
+          vert();
+          break;
+      }
 }
 
 void Feux::goToRouge() {
     switch (etat_actuel) {
         case VERT:
-            etat_actuel = CLIGNOTE_VERT;
-            this->tm.startTimer(temp_clignote_vert);
-            break;
+          etat_actuel = CLIGNOTE_VERT;
+          tm.startTimer(temp_clignote_vert);
+          break;
         case CLIGNOTE_VERT:
-            blinkVert();
-            if (this->tm.isTimerReady()) {
-                etat_souhaiter = VERT;
-            }
-        break;
+          clignoteVert();
+          if (tm.isTimerReady()) {
+            etat_actuel = JAUNE;
+            tm.startTimer(temp_jaune);
+          }
+          break;
         case JAUNE:
-            jaune();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = ROUGE;
-                this->tm.startTimer(temp_rouge);
-            }
-        break;
+          jaune();
+          if (tm.isTimerReady()) {
+            etat_actuel = ROUGE;
+          }
+          break;
         case ROUGE:
-            rouge();
-            if (this->tm.isTimerReady()) {
-                etat_actuel = CLIGNOTE_VERT;
-                this->tm.startTimer(temp_clignote_vert);
-            }
-        break;
-    }
+          rouge();
+          break;
+      }
 }
 
-void Feux::blinkVert() {
+void Feux::clignoteVert() {
     // TODO hardcoded
     if (millis() % 1000 > 500) {
         vert();

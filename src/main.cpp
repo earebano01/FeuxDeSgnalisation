@@ -3,23 +3,43 @@
   Auteur     : Yahya Madrani
   Date       : 02/12/2021
   Description: Proposition de solution en Classe
-  Version    : 0.0.1
+  Version    : 0.0.2
 */
 
 #include <Arduino.h>
 #include "Timer.h"
 #include "Feux.h"
+#include "Intersection.h"
 
-int PIN_VERT  = 7;
-int PIN_JAUNE = 8;
-int PIN_ROUGE = 9;
+// Configuration des broches
+// Route principal
+int PrincipalVert  = 5;
+int PincipalJaune  = 4;
+int PrincipalRouge = 3;
 
-Feux feux(PIN_VERT, PIN_JAUNE, PIN_ROUGE);
+// Route secondaire
+int SecondaireVert  = 6;
+int SecondaireJaune = 7;
+int SecondaireRouge = 8;
 
-void setup() {
-	
+// Creation des objets
+Feux feuxPrincipal(PrincipalVert, PincipalJaune, PrincipalRouge);
+Feux feuxSecondaire(SecondaireVert, SecondaireJaune, SecondaireRouge);
+Intersection intersection(feuxPrincipal, feuxSecondaire);
+
+
+void sideRoadTL();
+void mainRoadTL();
+
+void setup() {  
+  feuxPrincipal.off();
+  feuxSecondaire.off();
+  feuxPrincipal.vert();
+  feuxSecondaire.rouge();
 }
 
 void loop() {
-  feux.BoucleUnFeux();
+  intersection.toggleLights();
+  //feuxPrincipal.BoucleUnFeux();
 }
+
