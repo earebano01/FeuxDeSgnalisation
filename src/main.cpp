@@ -13,14 +13,14 @@
 
 // Configuration des broches
 // Route principal
-int PrincipalVert  = 5;
+int PrincipalVert  = 3;
 int PincipalJaune  = 4;
-int PrincipalRouge = 3;
+int PrincipalRouge = 5;
 
 // Route secondaire
-int SecondaireVert  = 6;
+int SecondaireVert  = 8;
 int SecondaireJaune = 7;
-int SecondaireRouge = 8;
+int SecondaireRouge = 6;
 
 // Creation des objets
 Feux feuxPrincipal(PrincipalVert, PincipalJaune, PrincipalRouge);
