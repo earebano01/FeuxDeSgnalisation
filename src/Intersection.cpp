@@ -35,22 +35,22 @@ void Intersection::toggleLights(){
 }
 
 void Intersection::routePrincipal(){
-    delay(tempDattente);        //5000
+    delay(tempDattente);            //5000
     secondaire.jaune();
-    delay(tempDeChangement);    //2500
+    delay(tempDeChangement);        //2500
     secondaire.rouge();
-    // delay(tempDeChangement);    //2500
+    // delay(tempDeChangement);     // le code qui fait que 2 lumières vertes s'allument en même temps
     principal.vert();
     delay(tempDeChangement);    //2500
 }
 
 void Intersection::routeSecondaire(){
-    delay(tempDattente);        //5000
+    delay(tempDattente);            //5000
     principal.jaune();
     delay(tempDeChangement);
     secondaire.rouge();
-    // delay(tempDeChangement);    //2500
+    // delay(tempDeChangement);     // le code qui fait que 2 lumières vertes s'allument en même temps
     principal.rouge();
     secondaire.vert();
-    delay(tempDeChangement);    //2500
+    delay(tempDeChangement);        //2500
 }
